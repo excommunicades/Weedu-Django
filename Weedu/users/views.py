@@ -68,43 +68,28 @@ class Register_User(generics.CreateAPIView):
 
         formatted_errors = {}
 
+
+        for error in errors.values():
+
+            e = [k for k, v in errors.items() if v == error]
+
+            formatted_errors[str(e[0])] = str(error[0])
+
         if errors.get("username"):
-            print(errors.get("username"))
+
             if errors["username"][0] == 'weedu_ user with this username already exists.':
 
                 formatted_errors["username"] = 'User with this name already exists.'
-
-            elif errors["username"][0] == 'This field is required.':
-
-                formatted_errors["username"] = 'Це поле є обов\'язковим'
-
-            else:
-                formatted_errors["username"] = errors["username"][0]
 
         if errors.get("email"):
 
             if errors["email"][0] == 'weedu_ user with this email already exists.':
 
-                formatted_errors["email"] = 'Користувач із цією електронною адресою вже існує.'
+                formatted_errors["email"] = 'User with this email already exists.'
 
-            elif errors["email"][0] == "Це поле обов'язкове.":
 
-                formatted_errors["email"] = "Це поле обов'язкове."
 
-            else:
-
-                formatted_errors["email"] = errors["email"][0]
-
-        if errors.get("password"):
-            formatted_errors["password"] = errors["password"][0]
-
-        if errors.get("confirm_password"):
-
-            if errors["confirm_password"][0] == 'This field is required.':
-
-                errors["confirm_password"][0] = 'Це поле є обов\'язковим'
-
-            formatted_errors["confirm_password"] = errors["confirm_password"][0]
+        print(formatted_errors)
 
         return Response(
             {"errors": formatted_errors},
@@ -139,37 +124,28 @@ class Login_User(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
 
         if not serializer.is_valid():
+
             errors = serializer.errors
+
             formatted_errors = {}
-            print(errors)
-            if errors.get('username'):
-                username_error = str(errors['username'][0])
 
-                if username_error == 'Користувач не існує.':
+            for error in errors.values():
 
-                    formatted_errors['username'] = 'Користувач не існує.'
+                e = [k for k, v in errors.items() if v == error]
 
-                elif username_error == "This field is required.":
+                formatted_errors[str(e[0])] = str(error[0])
 
-                    formatted_errors['username'] = "Це поле обов'язкове."
+            if errors.get("username"):
 
-                else:
+                if errors["username"][0] == 'weedu_ user with this username already exists.':
 
-                    formatted_errors['username'] = username_error
+                    formatted_errors["username"] = 'User with this username does not exist.'
 
-            if errors.get('password'):
+            if errors.get("email"):
 
-                password_error = str(errors['password'][0])
+                if errors["email"][0] == 'weedu_ user with this email already exists.':
 
-                if password_error == 'Неправильний пароль.':
-                    formatted_errors['password'] = 'Неправильний пароль.'
-
-                if password_error == 'This field is required.':
-
-                    formatted_errors['password'] = 'Це поле обов\'язкове.'
-
-                else:
-                    formatted_errors['password'] = password_error
+                    formatted_errors["email"] = 'User with this username does not exist.'
 
             return Response({'errors': formatted_errors}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -183,7 +159,7 @@ class Login_User(generics.GenericAPIView):
 
         else:
             
-            return Response({'errors': {'username': 'Користувач не знайдений'}}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'errors': {'username': 'User not found.'}}, status=status.HTTP_404_NOT_FOUND)
 
 class Reset_password(generics.GenericAPIView):
 
@@ -196,32 +172,20 @@ class Reset_password(generics.GenericAPIView):
         if not serializer.is_valid():
 
             errors = serializer.errors
+
             formatted_errors = {}
 
-            if errors.get('email'):
-                email_error = str(errors['email'][0])
+            for error in errors.values():
 
-                if email_error == 'Користувач не існує.':
+                e = [k for k, v in errors.items() if v == error]
 
-                    formatted_errors['email'] = 'Користувач не існує.'
-
-                elif email_error == 'This field is required.':
-
-                    formatted_errors['email'] = 'Це поле обов\'язкове.'
-
-                elif email_error == 'Enter a valid email address.':
-
-                    formatted_errors['email'] = 'Введіть корректну пошту.'
-
-                else:
-
-                    formatted_errors['email'] = email_error
+                formatted_errors[str(e[0])] = str(error[0])
 
             return Response({'errors': formatted_errors}, status=status.HTTP_400_BAD_REQUEST)
 
         serializer.save()
 
-        return Response({'message': 'Посилання для зміни пароля надіслано на вашу електронну адресу.'}, status=status.HTTP_200_OK)
+        return Response({'message': 'A link to change your password has been sent to your email address.'}, status=status.HTTP_200_OK)
 
 
 class Reset_confirm_password(generics.GenericAPIView):
@@ -238,12 +202,12 @@ class Reset_confirm_password(generics.GenericAPIView):
 
             serializer.save()
 
-            return Response({"message": "Пароль був змінений успішно"}, status=status.HTTP_205_RESET_CONTENT)
-        
+            return Response({"message": "The password was changed successfully"}, status=status.HTTP_205_RESET_CONTENT)
+
         else:
 
-            if serializer.errors.get('server')[0] == 'Неправильний чи прострочений токен.':
+            if serializer.errors.get('server')[0] == 'Invalid or expired token.':
 
-                return Response({"errors": {"new_password": 'Неправильний чи прострочений токен.'}},status=status.HTTP_400_BAD_REQUEST)
+                return Response({"errors": {"new_password": 'Invalid or expired token.'}},status=status.HTTP_400_BAD_REQUEST)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -95,8 +95,8 @@ class AuthorizationSerializer(serializers.Serializer):
         if username is None or password is None:
             raise serializers.ValidationError({
                                         "errors": {
-                                            "username": "Це поле обов'язкове.",
-                                            "password": "Це поле обов'язкове."
+                                            "username": "This field is required.",
+                                            "password": "This field is required."
                                             }
                                         })
 
@@ -119,7 +119,7 @@ class ResetPasswordSerializer(serializers.Serializer):
 
         except Weedu_User.DoesNotExist:
 
-            raise serializers.ValidationError("Користувач не існує.")
+            raise serializers.ValidationError("User with this email does not exist.")
 
         else:
 

@@ -13,7 +13,7 @@ def validate_username_unique(username):
 
     if Weedu_User.objects.filter(username=username).exists():
 
-        raise serializers.ValidationError("Користувач із таким іменем вже існує.")
+        raise serializers.ValidationError("User with this name already exists.")
 
     return username
 
@@ -22,7 +22,7 @@ def validate_email_unique(email):
 
     if Weedu_User.objects.filter(email=email).exists():
 
-        raise serializers.ValidationError("Користувач із цією електронною адресою вже існує.")
+        raise serializers.ValidationError("User with this email already exists.")
 
     return email
 
@@ -31,15 +31,15 @@ def validate_password_strength(password):
 
     if len(password) < 8:
 
-        raise serializers.ValidationError("Пароль має бути не менше 8 символів.")
+        raise serializers.ValidationError("Password must be at least 8 characters long.")
 
     elif not any(char.isdigit() for char in password):
 
-        raise serializers.ValidationError("Пароль має містити хоча б одну цифру.")
+        raise serializers.ValidationError("Password must contain at least one digit.")
 
     elif not any(not char.isalnum() for char in password):
 
-        raise serializers.ValidationError("Пароль повинен містити хоча б один спеціальний символ.")
+        raise serializers.ValidationError("The password must contain at least one special character.")
 
     return password
 
@@ -48,7 +48,7 @@ def validate_passwords_match(password, confirm_password):
 
     if password != confirm_password:
 
-        raise serializers.ValidationError({"confirm_password":"Паролі мають збігатися."})
+        raise serializers.ValidationError({"confirm_password": "Passwords must match."})
 
 
 def create_user(username, email, password):
@@ -74,9 +74,9 @@ def authenticate_user(username, password):
         
         except Weedu_User.DoesNotExist:
         
-            raise serializers.ValidationError({"username": "Користувач не існує."})
+            raise serializers.ValidationError({"username": "User with this username does not exist."})
     
-        raise serializers.ValidationError({"password": "Неправильний пароль."})
+        raise serializers.ValidationError({"password": "Wrong password."})
 
     return user
 
@@ -87,7 +87,7 @@ def send_password_reset_email(user):
 
     token = default_token_generator.make_token(user)
 
-    reset_url = reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})
+    reset_url = f'/password_reset_confirm/{uid}/{token}/'
 
     full_url = f'{settings.FRONTEND_URL}{reset_url}'
 
@@ -108,11 +108,11 @@ def validate_reset_password_token(uidb64, token):
 
     except (ValueError, TypeError, Weedu_User.DoesNotExist):
 
-        raise ValueError('Неправильний користувач.')
+        raise ValueError('Invalid user.')
 
     if not default_token_generator.check_token(user, token):
 
-        raise ValueError("Неправильний чи прострочений токен.")
+        raise ValueError("Invalid or expired token.")
 
     return user
 
