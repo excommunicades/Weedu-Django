@@ -2,7 +2,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 from django.db import models
 
 
-class ToDoUserManager(BaseUserManager):
+class Weedu_UserManager(BaseUserManager):
 
     def get_by_natural_key(self, username):
 
@@ -19,7 +19,7 @@ class ToDoUserManager(BaseUserManager):
         return user
 
 
-class ToDoUser(AbstractBaseUser, PermissionsMixin):
+class Weedu_User(AbstractBaseUser, PermissionsMixin):
 
     """ToDo user model"""
 
@@ -53,4 +53,4 @@ class ToDoUser(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'username'
 
-    objects = ToDoUserManager()
+    objects = Weedu_UserManager()

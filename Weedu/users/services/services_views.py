@@ -6,7 +6,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.core.mail import send_mail
 
-from users.models import ToDoUser
+from users.models import Weedu_User
 
 def register_user(user_data):
 
@@ -32,7 +32,7 @@ def activate_email(token):
 
     if user_data:
 
-        user = ToDoUser.objects.create_user(
+        user = Weedu_User.objects.create_user(
             username=user_data['username'],
             email=user_data['email'],
             password=user_data['password']
@@ -51,9 +51,9 @@ def login_user(user):
 
     try:
 
-        user_data = ToDoUser.objects.get(username=str(user))
+        user_data = Weedu_User.objects.get(username=str(user))
 
-    except ToDoUser.DoesNotExist:
+    except Weedu_User.DoesNotExist:
 
         return None
 

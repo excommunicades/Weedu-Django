@@ -14,7 +14,7 @@ from django.urls import reverse
 from django.conf import settings
 from django.core.mail import send_mail
 
-from users.models import ToDoUser
+from users.models import Weedu_User
 from users.services.services_serializers import(
     send_password_reset_email,
     validate_reset_password_token,
@@ -39,7 +39,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
         """Initialization fields and models"""
 
-        model = ToDoUser
+        model = Weedu_User
 
         fields = [
                 'username',
@@ -115,9 +115,9 @@ class ResetPasswordSerializer(serializers.Serializer):
 
         try:
 
-            user = ToDoUser.objects.get(email=value)
+            user = Weedu_User.objects.get(email=value)
 
-        except ToDoUser.DoesNotExist:
+        except Weedu_User.DoesNotExist:
 
             raise serializers.ValidationError("Користувач не існує.")
 

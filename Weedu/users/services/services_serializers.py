@@ -7,11 +7,11 @@ from django.contrib.auth.tokens import default_token_generator
 from django.urls import reverse
 from django.conf import settings
 
-from users.models import ToDoUser
+from users.models import Weedu_User
 
 def validate_username_unique(username):
 
-    if ToDoUser.objects.filter(username=username).exists():
+    if Weedu_User.objects.filter(username=username).exists():
 
         raise serializers.ValidationError("Користувач із таким іменем вже існує.")
 
@@ -20,7 +20,7 @@ def validate_username_unique(username):
 
 def validate_email_unique(email):
 
-    if ToDoUser.objects.filter(email=email).exists():
+    if Weedu_User.objects.filter(email=email).exists():
 
         raise serializers.ValidationError("Користувач із цією електронною адресою вже існує.")
 
@@ -53,7 +53,7 @@ def validate_passwords_match(password, confirm_password):
 
 def create_user(username, email, password):
 
-    user = ToDoUser(username=username, email=email)
+    user = Weedu_User(username=username, email=email)
 
     user.set_password(password)
 
@@ -70,9 +70,9 @@ def authenticate_user(username, password):
     
         try:
         
-            user = ToDoUser.objects.get(username=username)
+            user = Weedu_User.objects.get(username=username)
         
-        except ToDoUser.DoesNotExist:
+        except Weedu_User.DoesNotExist:
         
             raise serializers.ValidationError({"username": "Користувач не існує."})
     
@@ -103,11 +103,11 @@ def validate_reset_password_token(uidb64, token):
 
     try:
         uid = urlsafe_base64_decode(uidb64).decode('utf-8')
-    
-        user = ToDoUser.objects.get(pk=uid)
-    
-    except (ValueError, TypeError, ToDoUser.DoesNotExist):
-    
+
+        user = Weedu_User.objects.get(pk=uid)
+
+    except (ValueError, TypeError, Weedu_User.DoesNotExist):
+
         raise ValueError('Неправильний користувач.')
 
     if not default_token_generator.check_token(user, token):

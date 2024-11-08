@@ -30,7 +30,7 @@ from users.services.services_views import (
     login_user
 )
 
-from users.models import ToDoUser
+from users.models import Weedu_User
 
 
 
@@ -60,7 +60,7 @@ class Register_User(generics.CreateAPIView):
             request.session['verification_token'] = token
 
             return Response(
-                {"message": "Реєстрація успішна. Будь ласка, перевірте вашу пошту на лист для підтвердження."},
+                {"message": "Registration successful. Please check your email for confirmation."},
                 status=status.HTTP_200_OK
             )
 
@@ -69,10 +69,10 @@ class Register_User(generics.CreateAPIView):
         formatted_errors = {}
 
         if errors.get("username"):
+            print(errors.get("username"))
+            if errors["username"][0] == 'weedu_ user with this username already exists.':
 
-            if errors["username"][0] == 'to do user with this username already exists.':
-
-                formatted_errors["username"] = 'Користувач із таким іменем вже існує.'
+                formatted_errors["username"] = 'User with this name already exists.'
 
             elif errors["username"][0] == 'This field is required.':
 
@@ -83,7 +83,7 @@ class Register_User(generics.CreateAPIView):
 
         if errors.get("email"):
 
-            if errors["email"][0] == 'to do user with this email already exists.':
+            if errors["email"][0] == 'weedu_ user with this email already exists.':
 
                 formatted_errors["email"] = 'Користувач із цією електронною адресою вже існує.'
 
@@ -120,11 +120,11 @@ class Activate_email(generics.GenericAPIView):
 
         if user:
 
-            return Response({"message": "Електронну пошту успішно перевірено та користувача зареєстровано!"}, status=status.HTTP_201_CREATED)
+            return Response({"message": "The e-mail was successfully verified and the user was registered!"}, status=status.HTTP_201_CREATED)
 
         else:
 
-            return Response({"errors": {"message": "У сеансі відсутні дані користувача"}}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"errors": {"message": "The session is missing user data"}}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class Login_User(generics.GenericAPIView):
