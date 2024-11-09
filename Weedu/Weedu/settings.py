@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django_redis',
     
     'users',
+    'api',
 ]
 
 MIDDLEWARE = [
