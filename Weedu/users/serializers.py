@@ -86,6 +86,7 @@ class AuthorizationSerializer(serializers.Serializer):
 
     username = serializers.CharField()
     password = serializers.CharField()
+    is_cookie = serializers.BooleanField(required=False, default=False)
 
     def validate(self, attrs):
 

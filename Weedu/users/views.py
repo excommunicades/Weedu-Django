@@ -1,21 +1,16 @@
 import uuid
+from datetime import timedelta
+
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from rest_framework import generics, status, permissions
 from rest_framework.response import Response
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from rest_framework.views import exception_handler
-from rest_framework.exceptions import ValidationError
 
-from django.shortcuts import redirect
-from django.conf import settings
-from django.utils.http import urlsafe_base64_decode
-from django.contrib.auth import get_user_model
-from django.contrib.auth.tokens import default_token_generator
-from django.urls import reverse
-from django.core.mail import send_mail
 from django.core.cache import cache
+from django.contrib.auth import login
+
+# authentication_classes = [SessionAuthentication, JWTAuthentication]
 
 from users.serializers import (
     RegistrationSerializer,
@@ -151,14 +146,32 @@ class Login_User(generics.GenericAPIView):
 
         user = serializer.validated_data['user']
 
+        is_cookie = serializer.validated_data.get('is_cookie', False)
+
+        if is_cookie:
+
+            request.session.set_expiry(timedelta(weeks=2))
+
+        else:
+
+            request.session.set_expiry(0)
+
         login_response = login_user(user)
 
         if login_response:
 
+            login(request, user)
+
+            request.session['user_data'] = {
+                'username': user.username,
+                'email': user.email,
+                'pk': user.pk
+            }
+
             return Response(login_response, status=status.HTTP_200_OK)
 
         else:
-            
+
             return Response({'errors': {'username': 'User not found.'}}, status=status.HTTP_404_NOT_FOUND)
 
 class Reset_password(generics.GenericAPIView):
@@ -166,6 +179,7 @@ class Reset_password(generics.GenericAPIView):
     """Endpoint for letter submitting"""
 
     def post(self, request, *args, **kwargs):
+
         serializer = ResetPasswordSerializer(data=request.data)
 
         # Проверяем валидность данных

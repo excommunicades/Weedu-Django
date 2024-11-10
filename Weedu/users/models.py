@@ -51,6 +51,8 @@ class Weedu_User(AbstractBaseUser, PermissionsMixin):
 
     is_admin = models.BooleanField(default=False)
 
+    is_authenticated = models.BooleanField(default=False)
+
     USERNAME_FIELD = 'username'
 
     objects = Weedu_UserManager()
