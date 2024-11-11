@@ -4,6 +4,8 @@ from rest_framework_simplejwt.views import (
 )
 
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 
 from users.views import (
     Register_User,
@@ -21,5 +23,4 @@ urlpatterns = [
     path('verify-email/<str:token>/', Activate_email.as_view(), name='verify-email'),
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

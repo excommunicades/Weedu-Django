@@ -1,7 +1,25 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.core.validators import MaxValueValidator
+
 from django.db import models
 
+from publish.models.models import Shop
 
+from publish.models.models import Purchase
+
+def get_model(model):
+
+    if model == 'Shop':
+        
+        from publish.models.models import Shop
+
+        return Shop
+
+    if model == 'Purchase':
+
+        from publish.models.models import Purchase
+
+        return Purchase
 class Weedu_UserManager(BaseUserManager):
 
     def get_by_natural_key(self, username):
@@ -45,13 +63,36 @@ class Weedu_User(AbstractBaseUser, PermissionsMixin):
                             null=False,
                             )
 
-    # age = models.SmallIntegerField()
-    # date_of_birth = models.DateField(null=True, blank=True)
+    avatar = models.ImageField(upload_to='users_avatar/', null=True, blank=True)
+
+    expirience = models.SmallIntegerField(
+                                    default=0,
+                                    null=False,
+                                    blank=True,
+                                    validators=[MaxValueValidator(100)])
+
+    level = models.SmallIntegerField(
+                                default=0,
+                                null=False,
+                                blank=False,)
+
+    purchased_products = models.ManyToManyField(get_model('Shop'), through=get_model('Purchase'))
+
+    praise = models.SmallIntegerField(default=0, blank=True, null=True)
+
     is_active = models.BooleanField(default=True)
 
     is_admin = models.BooleanField(default=False)
 
     is_authenticated = models.BooleanField(default=False)
+
+    registered_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+
+    # courses_completed = models.SmallIntegerField()
+
+    # quiz_completed = models.SmallIntegerField()
+
+    # ...
 
     USERNAME_FIELD = 'username'
 

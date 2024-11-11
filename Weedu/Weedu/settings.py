@@ -219,6 +219,8 @@ SESSION_REDIS = {
     'SOCKET_TIMEOUT': 1
 }
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 
 # LOGGING = {
