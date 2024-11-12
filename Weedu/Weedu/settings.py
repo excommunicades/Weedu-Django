@@ -222,7 +222,10 @@ SESSION_REDIS = {
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
+CORS_ALLOW_CREDENTIALS = True
 
+CSRF_COOKIE_NAME = "csrftoken"  # Убедитесь, что имя cookie соответствует
+CSRF_COOKIE_PATH = '/' 
 # LOGGING = {
 #     'version': 1,
 #     'disable_existing_loggers': False,

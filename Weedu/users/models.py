@@ -72,7 +72,7 @@ class Weedu_User(AbstractBaseUser, PermissionsMixin):
                                     validators=[MaxValueValidator(100)])
 
     level = models.SmallIntegerField(
-                                default=0,
+                                default=1,
                                 null=False,
                                 blank=False,)
 

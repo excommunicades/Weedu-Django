@@ -24,7 +24,7 @@ def image_upload_function(instance, filename):
         folder_name = "other_images"
 
     safe_title = instance.title.replace(" ", "_").replace("/", "_")
-    
+
     return os.path.join(folder_name, safe_title, filename)
 
 
