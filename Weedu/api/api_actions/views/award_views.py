@@ -4,24 +4,36 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.response import Response
 
+# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxNDIyNzQyLCJpYXQiOjE3MzE0MjI0NDIsImp0aSI6Ijk5NzVhZjU5MTE3NDQwYzI4ZDAxZjFhN2RiYTM5NjM2IiwidXNlcl9pZCI6M30.ZtsRkGMxB6wM_gTx2YpZv_XoXlpw9PgSdiDAwTzpofY
+
+# {
+#     "username": "test_name",
+#     "email": "test_email@gmail.com",
+#     "password": "password1%",
+#     "confirm_password": "password1%"
+# }
 
 from users.models import Weedu_User
-from publish.models.models import Achievement, UserAchievement
+from publish.models.models import Award, UserAward
 
-from api.api_actions.serializers.achievement_serializers import(
-    CreateAchievementSerializer,
-    GetUserAchievementSerializer
+from api.api_actions.serializers.award_serializers import(
+    CreateAwardSerializer,
+    GetUserAwardSerializer,
 )
 
+# from api.api_actions.services.level_services import (
+#     user_level_up
+# )
 
-class Achievements(generics.GenericAPIView):
+
+class Awards(generics.GenericAPIView):
 
     """Endpoint for xp getting"""
 
     authentication_classes = [SessionAuthentication, JWTAuthentication]
 
-    queryset = Achievement.objects.all()
-    serializer_class = CreateAchievementSerializer
+    queryset = Award.objects.all()
+    serializer_class = CreateAwardSerializer
 
     def get(self, request, *args, **kwargs):
 
@@ -34,9 +46,9 @@ class Achievements(generics.GenericAPIView):
 
                 return Response(serializer.data)
 
-            except Achievement.DoesNotExist:
+            except Award.DoesNotExist:
 
-                return Response({"error": "Achievement not found"}, status=status.HTTP_404_NOT_FOUND)
+                return Response({"error": "Award not found"}, status=status.HTTP_404_NOT_FOUND)
         else:
 
             data = self.get_queryset()
@@ -128,12 +140,12 @@ class Achievements(generics.GenericAPIView):
 
         obj.delete()
 
-        return Response({"message":" Achievement successfully deleted."},status=status.HTTP_204_NO_CONTENT)
+        return Response({"message":" Award successfully deleted."},status=status.HTTP_204_NO_CONTENT)
 
 
-class Get_User_Achievement(generics.CreateAPIView):
+class Get_User_Award(generics.CreateAPIView):
 
     """Endpoint for user getting award"""
 
-    queryset = UserAchievement.objects.all()
-    serializer_class = GetUserAchievementSerializer
+    queryset = UserAward.objects.all()
+    serializer_class = GetUserAwardSerializer

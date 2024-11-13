@@ -1,38 +1,37 @@
 from rest_framework import serializers
 
-from publish.models.models import Achievement, UserAchievement
+from publish.models.models import Award, UserAward
 
-class CreateAchievementSerializer(serializers.ModelSerializer):
+class CreateAwardSerializer(serializers.ModelSerializer):
 
     """Serializer from json to db data for creation fields"""
 
     class Meta:
 
-        model = Achievement
+        model = Award
 
         fields = [
-            'pk',
             'title',
             'description',
             'image',
-            'xp',
-            'rarity',
+            'created_at'
             ]
+
         extra_kwargs = {'image': {'required': False}}
 
 
-class GetUserAchievementSerializer(serializers.ModelSerializer):
+class GetUserAwardSerializer(serializers.ModelSerializer):
 
     """transform from json to db data for creation fields"""
 
     class Meta:
 
-        model = UserAchievement
+        model = UserAward
 
         fields = [
             'user',
-            'achievement',
-            'achieved_at',
+            'award',
+            'awarded_at',
             ]
 
     def create(self, validated_data):
