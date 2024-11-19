@@ -79,6 +79,10 @@ class RegistrationSerializer(serializers.ModelSerializer):
         return create_user(validated_data['username'], validated_data['email'], validated_data['password'])
 
 
+class ActivateEmailSerializer(serializers.Serializer):
+
+    token = serializers.CharField()
+
 
 class AuthorizationSerializer(serializers.Serializer):
 
@@ -159,3 +163,14 @@ class ResetPasswordConfirmSerializer(serializers.Serializer):
         user = get_user_model().objects.get(pk=uid)
 
         reset_user_password(user, self.validated_data['new_password'])
+
+
+class GetUserDataSerializer(serializers.Serializer):
+
+    username = serializers.CharField()
+    email = serializers.CharField()
+    experience = serializers.IntegerField()
+    level = serializers.IntegerField()
+    praise = serializers.CharField()
+    is_active = serializers.BooleanField()
+    registered_at = serializers.CharField()

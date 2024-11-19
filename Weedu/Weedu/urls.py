@@ -14,13 +14,22 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from rest_framework.routers import DefaultRouter
+from drf_yasg import openapi
 
+from rest_framework.routers import DefaultRouter
+from rest_framework.schemas import get_schema_view
+
+from django.views.generic import TemplateView
 from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('users.urls')),
-    path('api/', include('api.settings.urls'))
+    path('api/', include('api.settings.urls')),
+    path('api_schema', get_schema_view(title='Swagger', description = 'REST API INFORMATION'), name='api_schema'),
+    path('swagger', TemplateView.as_view(
+                        template_name='docs.html',
+                        extra_context={'schema_url':'api_schema'}
+                        ), name='swagger-ui'),
 ]

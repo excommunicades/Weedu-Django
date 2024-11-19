@@ -16,9 +16,11 @@ from django.contrib.auth import login
 
 from users.serializers import (
     RegistrationSerializer,
+    ActivateEmailSerializer,
     AuthorizationSerializer,
     ResetPasswordSerializer,
     ResetPasswordConfirmSerializer,
+    GetUserDataSerializer,
     )
 
 from users.services.services_views import (
@@ -96,6 +98,8 @@ class Register_User(generics.CreateAPIView):
 
 
 class Activate_email(generics.GenericAPIView):
+
+    serializer_class = ActivateEmailSerializer
 
     def post(self, request, token, *args, **kwargs):
 
@@ -181,6 +185,8 @@ class Reset_password(generics.GenericAPIView):
 
     """Endpoint for letter submitting"""
 
+    serializer_class = ResetPasswordSerializer
+
     def post(self, request, *args, **kwargs):
 
         serializer = ResetPasswordSerializer(data=request.data)
@@ -235,7 +241,7 @@ class Get_user_data(generics.GenericAPIView):
     """Endpoint for getting user data"""
 
     authentication_classes = [SessionAuthentication, JWTAuthentication]
-
+    serializer_class = GetUserDataSerializer
 
     def post(self, request, *args, **kwargs):
 
