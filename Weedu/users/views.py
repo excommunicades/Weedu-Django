@@ -3,6 +3,8 @@ from datetime import timedelta
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.authentication import SessionAuthentication
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from rest_framework import generics, status, permissions
 from rest_framework.response import Response
@@ -22,7 +24,8 @@ from users.serializers import (
 from users.services.services_views import (
     register_user,
     activate_email,
-    login_user
+    login_user,
+    get_user_data_by_username
 )
 
 from users.models import Weedu_User
@@ -225,3 +228,25 @@ class Reset_confirm_password(generics.GenericAPIView):
                 return Response({"errors": {"new_password": 'Invalid or expired token.'}},status=status.HTTP_400_BAD_REQUEST)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class Get_user_data(generics.GenericAPIView):
+
+    """Endpoint for getting user data"""
+
+    authentication_classes = [SessionAuthentication, JWTAuthentication]
+
+
+    def post(self, request, *args, **kwargs):
+
+        request_user = request.user
+
+        try:
+
+            user_data = get_user_data_by_username(str(request_user))
+
+        except Weedu_User.DoesNotExist as e:
+
+            return Response({"errors": {"message": str(e)}}, status=status.HTTP_404_NOT_FOUND)
+
+        return Response(user_data, status=status.HTTP_200_OK)

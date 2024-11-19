@@ -65,7 +65,7 @@ class Weedu_User(AbstractBaseUser, PermissionsMixin):
 
     avatar = models.ImageField(upload_to='users_avatar/', null=True, blank=True)
 
-    expirience = models.SmallIntegerField(
+    experience = models.SmallIntegerField(
                                     default=0,
                                     null=False,
                                     blank=True,

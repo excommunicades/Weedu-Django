@@ -1,5 +1,6 @@
 import uuid
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.response import Response
 
 from django.core.cache import cache
 from django.core.mail import send_mail
@@ -66,3 +67,24 @@ def login_user(user):
             "email": user_data.email
         }
     }
+
+
+def get_user_data_by_username(username):
+
+    try:
+
+        user = Weedu_User.objects.get(username=username)
+
+        return {
+            "username": user.username,
+            "email": user.email,
+            "experience": user.experience,
+            "level": user.level,
+            "praise": user.praise,
+            "is_active": user.is_active,
+            "registered_at": user.registered_at
+        }
+
+    except Weedu_User.DoesNotExist:
+
+        raise Response({"errors": {"message": 'User does not exist.'}})
